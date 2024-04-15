@@ -25,32 +25,31 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   }
   
   let currentTime=getCurrentTime();
-  console.log("currentTime",currentTime);
+
   
   const handleChatMsg=async(msg)=>{
     await  axios.post(sendMessageRoute,{
          message:msg,
          from:currentUser._id,
          to:currentChat._id,
+         time:currentTime,
        });
        socket.current.emit("send-msg",{
         from:currentUser._id,
         to:currentChat._id, 
         message:msg,
-        timeStamp:currentTime,
+        time:currentTime,
        })
       const msgs=[...message];
-      msgs.push({fromSelf:true, message:msg,timeStamp:currentTime});
+      msgs.push({fromSelf:true, message:msg,time:currentTime});
       setMessage(msgs);
     
   }
     
       if(socket.current){
         socket.current.on("data-receive",(msg)=>{
-          console.log(msg);
-         setArrivalMsg({fromSelf:false,message:msg,timeStamp:msg.timeStamp});
-         
-        })}
+         setArrivalMsg({fromSelf:false,message:msg.message,time:msg.time}); 
+        })} 
      
 
      useEffect(()=>{

@@ -7,15 +7,12 @@ export const Message = ({msg,lastMessageRef}) => {
     <Container>
        {
         msg.map((msg,index)=>{
-          let time = msg.timeStamp?.length > 10 ? msg.timeStamp.slice(11, 16) : msg.timeStamp;
-
           return (
             <div key={index} className={`message ${msg.fromSelf ? "sender": "receiver"}`}>
             <div className="content">
              <p>{msg.message} </p>
-              <div className="time">
-               
-             <span>{ time }
+              <div className="time"> 
+             <span>{ msg.time }
              </span>
              </div>
             </div>

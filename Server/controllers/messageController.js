@@ -2,11 +2,13 @@ const { Mongoose } = require('mongoose');
 const msgModel=require('../model/msgModel')
 module.exports.addMessage=async(req,res,next)=>{
     try{
-        const {from ,to,message}=req.body;
+        const {from ,to,message,time}=req.body;
+        console.log(req.body);
         const data=await msgModel.create({
             message:{text:message},
             users:[from,to],
             sender:from,
+            time:time,
         });
         if(data)return res.json({msg:"succesfully added to the database"});
         return res.json({msg:"Failed to add msg"})
@@ -30,7 +32,7 @@ module.exports.getAllMessage=async(req,res,next)=>{
             return {
                 fromSelf:msg.sender.toString() === from,
                 message:msg.message.text,
-                 timeStamp:msg.createdAt,
+                 time:msg.time,
             }
         })
       

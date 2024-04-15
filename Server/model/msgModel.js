@@ -15,6 +15,13 @@ const messageSchema=new mongoose.Schema(
     ref:"Users",
     required:true,
  } 
+ ,
+   time:{
+      type:String,
+      required:true,
+   }
+
+ 
   }
  ,
  {
