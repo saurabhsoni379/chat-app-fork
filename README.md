@@ -1,0 +1,34 @@
+Chat App
+This is a simple chat application built with React.js, MongoDB, and WebSockets
+
+Features#
+Real-time messaging
+WebSockets for instant communication
+MongoDB for storing chat data
+User-friendly interface
+
+**Setup**
+1. Clone the repository:  
+         git clone https://github.com/saurabh-s19/chat-app.git
+
+2. Install dependencies:
+        cd Chat-app
+        npm install
+
+3. Start the server:
+        cd Server
+        npm start
+
+5. Start the client:
+        cd my-app
+        npm start
+   
+7. Access the application in your browser:
+        Website: http://localhost:3000   
+
+Technologies Used
+   React.js
+   MongoDB
+   WebSockets
+   express.js
+   node.js
