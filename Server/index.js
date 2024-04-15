@@ -34,15 +34,16 @@ const io=socket(server,{
 const onlineUsers=new Map();
 
 io.on('connection',(socket)=>{
+
   socket.on('add-user',(userId)=>{
 onlineUsers.set(userId,socket.id);
+ 
   })
 
 
 socket.on("send-msg",(data)=>{
 const sendUserSocket= onlineUsers.get(data.to);
 if(sendUserSocket){
-   console.log(data.message);
     socket.to(sendUserSocket).emit("data-receive" , data.message);
 }
 })

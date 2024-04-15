@@ -18,10 +18,8 @@ export const Contacts = ({contacts,currentUser,chatChange,dpChange}) => {
    
     }
    
-    const handleChangeDp=(image)=>{
-      dpChange(image);
-      
-    }
+ 
+    
    
     
   return (
@@ -39,7 +37,7 @@ export const Contacts = ({contacts,currentUser,chatChange,dpChange}) => {
              return ( 
            <div key={index} className= {`contact ${index === currentSelected ? 
            "selected":"" } ` }   onClick={()=>{ changeCurrentChat(index,contact);}} >
-             <div className='avatar'       onClick={()=>handleChangeDp(contact.avatarImage)}>
+             <div className='avatar'      >
              <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="avatar"  ></img>
        
              </div>
@@ -141,12 +139,23 @@ gap:0.5rem;
     }
   }
   @media screen and (min-width:720px) and (max-width:1080px){
+    html {
+  font-size: 12px;
+}
+  
     .username{
       h2{
         font-size:1rem;
       }
     }
   }
+  
+
+    @media screen and (min-width:360px) and (max-width:480px){
+      html{
+      font-size:8px;
+      }
+    }
 
  
 `;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, {useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Logout } from './Logout';
 import { ChatInput } from './ChatInput';
@@ -8,6 +8,25 @@ import axios from 'axios';
 import {sendMessageRoute,getMessage} from "../utils/APIRoutes"
 export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   const [message,setMessage]=useState([]);
+  const [arrivalMsg,setArrivalMsg]=useState(null);
+  const lastMessageRef = useRef(null);
+  function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    
+    return `${hours}.${minutes} ${ampm}`;
+  }
+  
+  let currentTime=getCurrentTime();
+  console.log("currentTime",currentTime);
+  
   const handleChatMsg=async(msg)=>{
     await  axios.post(sendMessageRoute,{
          message:msg,
@@ -17,19 +36,32 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
        socket.current.emit("send-msg",{
         from:currentUser._id,
         to:currentChat._id, 
-        message:msg
+        message:msg,
+        timeStamp:currentTime,
        })
       const msgs=[...message];
-      msgs.push({fromSelf:true, message:msg});
+      msgs.push({fromSelf:true, message:msg,timeStamp:currentTime});
       setMessage(msgs);
     
   }
-   if(socket.current){
-   socket.current.on("data-receive",(msg)=>{
     
-    const obj={fromSelf:false,message:msg};
-    setMessage((prev)=>[...prev,obj]);
-   })}
+      if(socket.current){
+        socket.current.on("data-receive",(msg)=>{
+          console.log(msg);
+         setArrivalMsg({fromSelf:false,message:msg,timeStamp:msg.timeStamp});
+         
+        })}
+     
+
+     useEffect(()=>{
+     arrivalMsg && setMessage((prev)=>[...prev,arrivalMsg])
+     },[arrivalMsg])
+
+     useEffect(() => {
+      if (lastMessageRef.current) {
+        lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, [message]);
 
    useEffect(()=>{
     (async()=>{
@@ -50,7 +82,7 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   <>   {
      currentChat &&
     (
-    <Container   >
+    <Container >
       <div className="chat-header" >
         <div className="user-detail">
           <div className="avatar" >
@@ -62,7 +94,7 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
         </div>
         <Logout  />
       </div>
-            <Message msg={message} />
+            <Message msg={message} lastMessageRef={lastMessageRef} />
        <ChatInput  chatMsg={handleChatMsg} />
     </Container>
     )

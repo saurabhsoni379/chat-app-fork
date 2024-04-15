@@ -1,21 +1,29 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Message = ({msg}) => {
+export const Message = ({msg,lastMessageRef}) => {
   
   return (
     <Container>
        {
         msg.map((msg,index)=>{
+          let time = msg.timeStamp?.length > 10 ? msg.timeStamp.slice(11, 16) : msg.timeStamp;
+
           return (
             <div key={index} className={`message ${msg.fromSelf ? "sender": "receiver"}`}>
             <div className="content">
-             <p>{msg.message}</p>
+             <p>{msg.message} </p>
+              <div className="time">
+               
+             <span>{ time }
+             </span>
+             </div>
             </div>
             </div>
           )
         })
        }
+         <div ref={lastMessageRef}></div>
     </Container>
   )
 }
@@ -27,6 +35,15 @@ display:flex;
 flex-direction:column;
 gap:1rem;
 color:white;
+
+&::-webkit-scrollbar{
+   
+       width:0.4rem;
+       &-thumb{
+        background-color:#ffffff39;
+        cursor:pointer;
+       }
+     }
 .message{
   display:flex;
   align-items:center;
@@ -37,6 +54,17 @@ color:white;
     font-size:1rem;
     padding:1rem;
     border-radius:1rem;
+    .time{
+      display:flex;
+      justify-content:flex-end;
+      
+    }
+    span{
+      font-size:0.7rem;
+      margin-left: 20px;
+      padding:0.3rem;
+      color:grey;
+    }
   }
 }
 .sender{

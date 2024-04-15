@@ -92,10 +92,13 @@ background-color:#131324;
   
     @media screen and (min-width:720px) and (max-width:1080px){
       grid-templete-column:35% 75%;
+      font-size:0.8rem;
+     
     }
 
     @media screen and (min-width:360px) and (max-width:480px){
       grid-templete-column:45% 55%;
+      font-size:0.5rem;
     }
 }
 `;

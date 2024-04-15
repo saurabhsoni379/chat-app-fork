@@ -20,6 +20,7 @@ export const ChatInput = ({chatMsg}) => {
           let message=msg;
         
           message+=emojiData.emoji;
+          
          
           setMsg(message);
      }
