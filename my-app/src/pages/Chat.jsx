@@ -1,21 +1,22 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect,useContext, useRef} from 'react'
 import styled  from 'styled-components';
-import {Await, Link, useNavigate} from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import axios from  'axios';
-import {allusers} from "../utils/APIRoutes"
+import {allusers,host} from "../utils/APIRoutes"
 import { Contacts } from '../component/Contacts';
 import { Welcome } from '../component/Welcome';
-import { Showdp } from './Showdp';
 import { Chatcontainer } from '../component/Chatcontainer';
+import dlgbx from '../context/dlgbx';
+import { DialogBox } from '../component/DialogBox';
+import {io} from "socket.io-client"
 export const Chat = () => {
+  const socket=useRef();
   const navigate=useNavigate();
   const [contacts,setContacts]=useState([]);
   const [currentUser,setCurrentUser]=useState(undefined);
  const [currentChat,setCurrentChat]=useState(undefined);
- const [showDp,setShowDp]=useState(undefined);
  const [isLoaded,SetIsLoaded]=useState(false);
- const [isOpacityChange,setIsOpacityChange]=useState(false);
- const changeopacity=useRef(null);
+const {isdlg}=useContext(dlgbx);
   useEffect(()=>{
     ( async()=>{
 
@@ -26,10 +27,13 @@ export const Chat = () => {
           SetIsLoaded(true);
       }) ()  
   },[]);
-  // useEffect(()=>{
-  //   if(isOpacityChange)
-  // changeopacity.current.style.opacity=0.5;
-  // },[isOpacityChange])
+
+  useEffect(()=>{
+    if(currentUser){
+     socket.current=io(host);
+     socket.current.emit('add-user',currentUser._id);
+    }
+  },[currentUser])
   
 
   useEffect(()=>{
@@ -51,21 +55,17 @@ export const Chat = () => {
    setCurrentChat(chat);
  }
 
- const handleShowDp=(image)=>{
-  setShowDp(image);
-}
+
 
 
   return (
     <Container>
-    <div className='container' ref={changeopacity}>
-        <Contacts  contacts={contacts} currentUser={currentUser}  chatChange={handleChatChange} dpChange={handleShowDp}/>
-          { isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser} /> :(<Chatcontainer currentChat={currentChat} setIsOpacityChange={setIsOpacityChange} />) }
-        {/* {
-      showDp ?
-      <Showdp image={showDp}/>: <Welcome currentUser={currentUser} />
-         
-     } */}
+      
+    <div className='container' >
+    {isdlg && <DialogBox/>}
+        <Contacts  contacts={contacts} currentUser={currentUser}  chatChange={handleChatChange} />
+          { isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser} /> :(<Chatcontainer currentChat={currentChat} currentUser={currentUser} socket={socket} />) }
+
       </div>
 
     </Container>
@@ -81,8 +81,9 @@ flex-direction:column;
 align-items:center;
 justify-content:center;
 background-color:#131324;
+
 .container{
-  z-index:0;
+ 
   height:87vh;
   width:87vw;
   display:grid;

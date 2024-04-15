@@ -1,14 +1,28 @@
-import React from 'react'
+import React ,{useContext} from  'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-export const DialogBox = ({SetDialogBox}) => {
+import dlgbx from '../context/dlgbx'
+
+export const DialogBox = () => {
     const navigate=useNavigate();
+    const {isdlg,setIsDlg}=useContext(dlgbx);
+
     const handleLogout=async()=>{
          localStorage.clear();
            navigate("/login");
+           setIsDlg(false)
     }
+     const closeWindow=(e)=>{
+      console.log(e.target.id)
+      if(e.target.id==='mainDiv'){
+        
+        setIsDlg(false)
+      }
+     }
   return (
-    <Container >
+    <Container   onClick={closeWindow} id='mainDiv'>
+     <div className={`dialogBox ${isdlg ? 'show' : ''}`}>
+     
       <div className="header">
       <h2>Log out</h2></div>
       <hr/>
@@ -17,41 +31,58 @@ export const DialogBox = ({SetDialogBox}) => {
       </div>
       <div className="button-section">
     <button className='button confirm' onClick={handleLogout}>Confirm</button>
-    <button className='button cancel' onClick={()=>SetDialogBox(false)}>Cancel</button>
+    <button className='button cancel' onClick={()=>setIsDlg(false)}>Cancel</button>
     </div>
+
+    </div>
+  
     </Container>
   )
 }
 
 const Container =styled.div`
- height:25%;
- width:40vmin;
+    display:flex;
+    justify-content: center;
+    height:100%;
+    width: 100%;
+  position:absolute;   
+  background-color: rgba(10, 5, 5, 0.2);
+
+  
+ .dialogBox{
+  opacity:0.3;
+  transition:opacity 0.7s ease-in-out;
+  height:30%;
+ width:50vmin;
  background-color:#9186f3;
- border-radius:1rem;
+ border-radius:0.3rem;
  padding:1rem ;
- position:absolute;
- z-index:2;
  top:10%;
  left:50%;
+ color:white;
+
 
  .header{
     h2{
         padding:0.4rem;
+        text-transform:uppercase;  
     }
  }
  .body{
-    padding:1rem 0rem;
+  
+    padding:2rem 0rem;
+    
  }
  .button-section{
-    display:flex;
-     gap:1.5rem;
-     justify-content:center;
+    display:flex; 
+     justify-content:space-between;
      
    .button{
      padding:0.6rem;
-     border-radius:1rem;
+     border-radius:0.3rem;
      border:none;
      cursor:pointer;
+     color:white;
    }
    .cancel{
     background-color:red;
@@ -60,7 +91,12 @@ const Container =styled.div`
     background-color:blue;
    }
    }
+ }
+
+
+ &:hover  .dialogBox{
+  opacity:1;
+ }
  
 
- 
 `;

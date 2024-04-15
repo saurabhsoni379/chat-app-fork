@@ -37,7 +37,7 @@ export const Contacts = ({contacts,currentUser,chatChange,dpChange}) => {
           {  
             contacts.map((contact,index)=>{
              return ( 
-           <div  className= {`contact ${index === currentSelected ? 
+           <div key={index} className= {`contact ${index === currentSelected ? 
            "selected":"" } ` }   onClick={()=>{ changeCurrentChat(index,contact);}} >
              <div className='avatar'       onClick={()=>handleChangeDp(contact.avatarImage)}>
              <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="avatar"  ></img>

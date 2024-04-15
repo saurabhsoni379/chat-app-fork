@@ -49,8 +49,8 @@ export const ChatInput = ({chatMsg}) => {
 const Container=styled.div`
  display: grid;
 grid-template-columns: 5% 95%;
-align-items:center;
-${'' /* background-color:#080420; */}
+
+
 padding:0rem 2rem 0.3rem 2rem;
 height:2.5rem;
  .button-container{
