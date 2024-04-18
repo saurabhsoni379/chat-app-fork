@@ -10,6 +10,7 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   const [message,setMessage]=useState([]);
   const [arrivalMsg,setArrivalMsg]=useState(null);
   const lastMessageRef = useRef(null);
+
   function getCurrentTime() {
     const now = new Date();
     let hours = now.getHours();
@@ -24,10 +25,12 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
     return `${hours}.${minutes} ${ampm}`;
   }
   
-  let currentTime=getCurrentTime();
+  
 
+ 
   
   const handleChatMsg=async(msg)=>{
+     let currentTime=getCurrentTime();
     await  axios.post(sendMessageRoute,{
          message:msg,
          from:currentUser._id,
@@ -45,21 +48,36 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
       setMessage(msgs);
     
   }
+  const valRef = useRef(null);
+  useEffect(() => {
+    if (currentChat) {
+      valRef.current = currentChat._id;
+    }
+  }, [currentChat]);
+
+    useEffect(() => {
+  if (socket.current) {
+    socket.current.on("data-receive", (msg) => {
+      const val = valRef.current; 
+      if (msg.from === val) {
+        setArrivalMsg({ fromSelf: false, message: msg.message, time: msg.time });
+      }
+    });
+  }
+}, [socket.current]);
     
-      if(socket.current){
-        socket.current.on("data-receive",(msg)=>{
-         setArrivalMsg({fromSelf:false,message:msg.message,time:msg.time}); 
-        })} 
+ 
      
 
      useEffect(()=>{
+          
      arrivalMsg && setMessage((prev)=>[...prev,arrivalMsg])
      },[arrivalMsg])
 
      useEffect(() => {
       if (lastMessageRef.current) {
         lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
+      } 
     }, [message]);
 
    useEffect(()=>{

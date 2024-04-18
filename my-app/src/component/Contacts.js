@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import  Logo from "../assets/logo.svg";
-export const Contacts = ({contacts,currentUser,chatChange,dpChange}) => {
+export const Contacts = ({contacts,currentUser,chatChange}) => {
     const [currentUserName,setCurrentUserName]=useState(undefined);
     const [currentUserImage,setCurrentUserImage]=useState(undefined);
     const [currentSelected,setCurrentSelected]=useState(undefined);
@@ -13,6 +13,7 @@ export const Contacts = ({contacts,currentUser,chatChange,dpChange}) => {
     },[currentUser]);
 
     const changeCurrentChat=(index,contact)=>{
+     
       setCurrentSelected(index);
      chatChange(contact);
    

@@ -3,7 +3,7 @@ const msgModel=require('../model/msgModel')
 module.exports.addMessage=async(req,res,next)=>{
     try{
         const {from ,to,message,time}=req.body;
-        console.log(req.body);
+       
         const data=await msgModel.create({
             message:{text:message},
             users:[from,to],

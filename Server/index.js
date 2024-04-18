@@ -44,7 +44,7 @@ onlineUsers.set(userId,socket.id);
 socket.on("send-msg",(data)=>{
 const sendUserSocket= onlineUsers.get(data.to);
 if(sendUserSocket){
-    socket.to(sendUserSocket).emit("data-receive" ,  {message:data.message,time:data.time});
+    socket.to(sendUserSocket).emit("data-receive" ,  {message:data.message,time:data.time,from:data.from});
 }
 })
 });
