@@ -13,11 +13,12 @@ export const Contacts = ({contacts,currentUser,chatChange}) => {
     },[currentUser]);
 
     const changeCurrentChat=(index,contact)=>{
-     
+      
       setCurrentSelected(index);
      chatChange(contact);
    
     }
+ 
    
  
     
@@ -42,10 +43,15 @@ export const Contacts = ({contacts,currentUser,chatChange}) => {
              <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="avatar"  ></img>
        
              </div>
+             <div className='name_msg'>
              <div className='username'>
                <h3>{contact.username}</h3>
+                
              </div>
-           </div>)
+              
+              </div>
+           </div>
+           )
             })
           }
    
@@ -106,12 +112,17 @@ gap:0.5rem;
         height:2.5rem;
         transition:0.5s ease-in-out;
       }
-      
-         
-        
-      h3{
+      .name_msg{
+        width:100%;
+       display:flex;
+       justify-content:space-between;
+       padding:0.3rem;
+       
+          h3{
       
         color:white;
+      }
+      
       }
       
     }

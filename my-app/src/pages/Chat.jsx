@@ -13,6 +13,8 @@ export const Chat = () => {
   const socket=useRef();
   const navigate=useNavigate();
   const [contacts,setContacts]=useState([]);
+  
+  const [sender_id,setsender_id]=useState("");
   const [currentUser,setCurrentUser]=useState(undefined);
  const [currentChat,setCurrentChat]=useState(undefined);
  const [isLoaded,SetIsLoaded]=useState(false);
@@ -52,10 +54,33 @@ const {isdlg}=useContext(dlgbx);
        })();
   },[currentUser])
 
+
+
  const handleChatChange=(chat)=>{
    setCurrentChat(chat);
  }
 
+ useEffect(() => {
+  if (socket.current) {
+    socket.current.on("data-receive", (msg) => {
+     setsender_id(msg.from);
+     
+    });
+  }
+}, [socket.current]);
+
+
+    
+  useEffect(()=>{
+    const sortedContacts = [...contacts].sort((a, b)=> {
+      if(a._id===sender_id && b._id!==sender_id)return -1;
+          if(a._id!==sender_id && b._id===sender_id)return 1;
+            else return 0;
+    }) 
+     
+    setContacts(sortedContacts);
+  },[sender_id])
+ 
 
 
 
@@ -64,8 +89,8 @@ const {isdlg}=useContext(dlgbx);
       
     <div className='container' >
     {isdlg && <DialogBox/>}
-        <Contacts  contacts={contacts} currentUser={currentUser}  chatChange={handleChatChange} />
-          { isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser} /> :(<Chatcontainer currentChat={currentChat} currentUser={currentUser} socket={socket} />) }
+        <Contacts  contacts={contacts} currentUser={currentUser}  chatChange={handleChatChange}  sender_id={sender_id}  />
+          { isLoaded && currentChat === undefined ? <Welcome currentUser={currentUser} /> :(<Chatcontainer currentChat={currentChat} currentUser={currentUser} socket={socket}  />) }
 
       </div>
 

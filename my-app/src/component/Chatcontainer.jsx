@@ -3,32 +3,16 @@ import styled from 'styled-components'
 import { Logout } from './Logout';
 import { ChatInput } from './ChatInput';
 import { Message } from './Message';
-
 import axios from 'axios';
 import {sendMessageRoute,getMessage} from "../utils/APIRoutes"
+import getCurrentTime from "../utils/TimeFunc"
 export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   const [message,setMessage]=useState([]);
+
   const [arrivalMsg,setArrivalMsg]=useState(null);
   const lastMessageRef = useRef(null);
 
-  function getCurrentTime() {
-    const now = new Date();
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    
-    hours = hours % 12;
-    hours = hours ? hours : 12; 
 
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    
-    return `${hours}.${minutes} ${ampm}`;
-  }
-  
-  
-
- 
-  
   const handleChatMsg=async(msg)=>{
      let currentTime=getCurrentTime();
     await  axios.post(sendMessageRoute,{
@@ -57,7 +41,8 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
 
     useEffect(() => {
   if (socket.current) {
-    socket.current.on("data-receive", (msg) => {
+    socket.current.on("data-receive", async(msg) => {
+      
       const val = valRef.current; 
       if (msg.from === val) {
         setArrivalMsg({ fromSelf: false, message: msg.message, time: msg.time });
@@ -78,6 +63,7 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
       if (lastMessageRef.current) {
         lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
       } 
+        
     }, [message]);
 
    useEffect(()=>{

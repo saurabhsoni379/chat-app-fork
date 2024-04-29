@@ -43,6 +43,7 @@ export const DialogBox = () => {
 const Container =styled.div`
     display:flex;
     justify-content: center;
+ 
     height:100%;
     width: 100%;
   position:absolute;   
@@ -51,13 +52,13 @@ const Container =styled.div`
   
  .dialogBox{
   opacity:0.3;
-  transition:opacity 0.7s ease-in-out;
-  height:30%;
- width:50vmin;
+  transition:opacity 0.5s ease-in-out;
+  height:30vmin;
+ width:45vmin;
  background-color:#9186f3;
  border-radius:0.3rem;
  padding:1rem ;
- top:10%;
+ top:30%;
  left:50%;
  color:white;
 
@@ -97,6 +98,7 @@ const Container =styled.div`
  &:hover  .dialogBox{
   opacity:1;
  }
+
  
 
 `;
