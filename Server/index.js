@@ -24,7 +24,9 @@ mongoose.connect(process.env.MONGO_URL).then(
 });
 app.use("/api/auth" , userRoute);
 app.use("/api/message" , messageRoute);
-
+app.get("*",(req,res)=>{
+ res.status(200).json({message:'good request'});
+})
 const server=app.listen(process.env.PORT,()=>{
     console.log(`Server started at Port ${process.env.PORT}`)
 })
