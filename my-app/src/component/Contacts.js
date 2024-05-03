@@ -34,7 +34,7 @@ export const Contacts = ({contacts,currentUser,chatChange}) => {
            <h2>snappy </h2>
           </div>
           <div className='contacts'>
-          {  
+          {  contacts.length>0 && (
             contacts?.map((contact,index)=>{
              return ( 
            <div key={index} className= {`contact ${index === currentSelected ? 
@@ -52,7 +52,7 @@ export const Contacts = ({contacts,currentUser,chatChange}) => {
               </div>
            </div>
            )
-            })
+            }))
           }
    
           </div>
