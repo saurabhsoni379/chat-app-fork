@@ -1,4 +1,4 @@
-export const host = "http://localhost:5000";
+export const host = "chat-app-alpha-orcin.vercel.app";
 export const registerApi=`${host}/api/auth/register`;
 export const loginApi=`${host}/api/auth/login`;
 export const avatarApi=`${host}/api/auth/setAvatar`;
