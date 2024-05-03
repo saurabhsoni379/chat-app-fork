@@ -35,7 +35,7 @@ export const Contacts = ({contacts,currentUser,chatChange}) => {
           </div>
           <div className='contacts'>
           {  
-            contacts.map((contact,index)=>{
+            contacts?.map((contact,index)=>{
              return ( 
            <div key={index} className= {`contact ${index === currentSelected ? 
            "selected":"" } ` }   onClick={()=>{ changeCurrentChat(index,contact);}} >
