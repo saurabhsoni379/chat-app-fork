@@ -9,7 +9,11 @@ require('dotenv/config');
 
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+     origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app/"],
+  method:["POST","GET"],
+credentials:true,
+}))
 
 mongoose.connect(process.env.MONGO_URL).then(
     ()=>{
@@ -27,8 +31,9 @@ const server=app.listen(process.env.PORT,()=>{
 
 const io=socket(server,{
     cors:{
-        origin:"http://localhost:3000",
-        credentials:true,
+        origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app/"],
+  method:["POST","GET"],
+credentials:true,
     },
 });
 const onlineUsers=new Map();
