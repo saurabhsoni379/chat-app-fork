@@ -45,7 +45,7 @@ color:white;
   display:flex;
   align-items:center;
   .content{
-    max-width:40%;
+    max-width:25vmax;
     padding:1rem;
     overflow-wrap:break-word;
     font-size:1rem;
