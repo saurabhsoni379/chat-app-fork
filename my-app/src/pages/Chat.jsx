@@ -117,7 +117,7 @@ background-color:#131324;
   background-color:#00000076;
   
     @media (min-width:500px) and (max-width:1080px){
-      grid-template-columns:35% 75%;
+      grid-template-columns:40% 60%;
      
     }
 
