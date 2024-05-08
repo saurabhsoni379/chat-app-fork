@@ -116,15 +116,14 @@ background-color:#131324;
   grid-template-columns:25% 75%;
   background-color:#00000076;
   
-    @media screen and (min-width:720px) and (max-width:1080px){
-      grid-templete-column:35% 75%;
-      font-size:0.8rem;
+    @media (min-width:500px) and (max-width:1080px){
+      grid-template-columns:35% 75%;
      
     }
 
-    @media screen and (min-width:360px) and (max-width:480px){
-      grid-templete-column:45% 55%;
-      font-size:0.5rem;
+    @media (min-width:0px) and (max-width:480px){
+      grid-template-columns:50% 50%;
+      
     }
 }
 `;
