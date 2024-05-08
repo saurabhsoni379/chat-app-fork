@@ -13,15 +13,22 @@ export const Welcome = ({currentUser}) => {
 }
 
 const Container=styled.div`
+overflow:hidden;
  display:flex;
  justify-content:center;
  align-items:center;
  color:white;
  flex-direction:column;
  img{
-    height:20rem;
+   height:25vmax;
  }
  span{
     color:#4e0eff
  }
+  @media (min-width:0px) and (max-width:480px){
+     html{
+      font-size:13px;
+     }
+      
+    }
  `;
