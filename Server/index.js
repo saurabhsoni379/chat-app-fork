@@ -10,7 +10,7 @@ require('dotenv/config');
 
 app.use(express.json())
 app.use(cors({
-     origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app/"],
+     origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app"],
   method:["POST","GET"],
 credentials:true,
 }))
@@ -33,7 +33,7 @@ const server=app.listen(process.env.PORT,()=>{
 
 const io=socket(server,{
     cors:{
-        origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app/"],
+        origin:["http://localhost:3000","https://chat-app-alpha-orcin.vercel.app"],
   method:["POST","GET"],
 credentials:true,
     },
