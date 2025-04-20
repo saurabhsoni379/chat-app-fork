@@ -7,7 +7,9 @@ import { Buffer } from 'buffer';
 import axios from 'axios';
 import {avatarApi} from "../utils/APIRoutes"
 import { useNavigate} from 'react-router-dom'
+
 export const SetAvatar = () => {
+  console.log("set avatar page");
    const navigate=useNavigate();
   const api="https://api.multiavatar.com";
     const [avatar,setAvatar]=useState([]);
@@ -30,18 +32,21 @@ export const SetAvatar = () => {
     const data=[];
     for(let i=0;i<6;i++){
       try{
-        const image=await axios.get(`${api}/${Math.round(Math.random()*100000)}`);  
-        const buffer = Buffer.from(image.data,'utf-8');
+        console.log("fetching avatar");
+        const randomId = Math.random().toString(36).substring(2, 8);
+        const response = await fetch(`https://api.dicebear.com/7.x/avataaars/svg?seed=${randomId}`);
+        const svg = await response.text();
+        const buffer = Buffer.from(svg);
         data.push(buffer.toString("base64"));
       }
       catch(ex){
-        console.log(ex);
+        console.error("Error fetching avatar:", ex);
+        // Add a fallback avatar in case of error
+        data.push("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDAiIGZpbGw9IiM0ZTBlZmYiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIxNSIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik0zMCA3MEg3MEw1MCA5MFoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=");
       }
-      
-   }
+    }
     setAvatar(data);
     setLoding(false);
-   
   }
 
  useEffect(()=>{
@@ -73,7 +78,7 @@ const setAvatarImage=async()=>{
        user.avatarImage=data.image;
        localStorage.setItem("chat-app-user" ,JSON.stringify( user));
       
-       navigate("/");
+       navigate("/chat");
     }
     
   }
@@ -114,6 +119,17 @@ const setAvatarImage=async()=>{
     </>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
 
 const Container=styled.div`
  display:flex;

@@ -4,14 +4,16 @@ import { Logout } from './Logout';
 import { ChatInput } from './ChatInput';
 import { Message } from './Message';
 import axios from 'axios';
-import {sendMessageRoute,getMessage} from "../utils/APIRoutes"
+import {sendMessageRoute, getAllMessageRoute} from "../utils/APIRoutes"
 import getCurrentTime from "../utils/TimeFunc"
+import { v4 as uuidv4 } from 'uuid';
+
 export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   const [message,setMessage]=useState([]);
-
   const [arrivalMsg,setArrivalMsg]=useState(null);
   const lastMessageRef = useRef(null);
-
+  const [msg, setMsg] = useState("");
+  const scrollRef = useRef();
 
   const handleChatMsg=async(msg)=>{
      let currentTime=getCurrentTime();
@@ -69,7 +71,7 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
    useEffect(()=>{
     (async()=>{
       if(currentChat){
-       const {data}=await axios.get(getMessage,{
+       const {data}=await axios.get(getAllMessageRoute,{
         params:{
         from:currentUser._id,
         to:currentChat._id,}
@@ -81,6 +83,22 @@ export const Chatcontainer = ({currentChat, currentUser,socket}) => {
   
    },[currentChat])
   
+  const handleSendMsg = async (e) => {
+    e.preventDefault();
+    if (msg.length > 0) {
+      await handleChatMsg(msg);
+      setMsg("");
+    }
+  };
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [message]);
+
+  useEffect(() => {
+    console.log('Current chat in Chatcontainer:', currentChat);
+  }, [currentChat]);
+
   return (
   <>   {
      currentChat &&

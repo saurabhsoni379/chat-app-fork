@@ -5,7 +5,7 @@ import logo from '../assets/logo.svg'
 import {Bounce, ToastContainer , toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import {loginApi} from "../utils/APIRoutes"
+import { loginRoute } from "../utils/APIRoutes"
 
 export const Login = () => {
   const navigate=useNavigate();
@@ -30,7 +30,7 @@ export const Login = () => {
         e.preventDefault();
       if(handleValidation()){
         const {password,username}=value;
-        const {data}=await  axios.post(loginApi,{
+        const {data}=await  axios.post(loginRoute,{
           password,username
         })
       
@@ -39,7 +39,14 @@ export const Login = () => {
 
       if(data.status === true){
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
-        navigate("/"); 
+        // Dispatch storage event to notify other components
+        window.dispatchEvent(new Event('storage'));
+        
+        if (!data.user.isAvatarImageSet) {
+          navigate("/setAvatar");
+        } else {
+          navigate("/");
+        }
       }
       };
 

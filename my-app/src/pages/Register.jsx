@@ -5,7 +5,7 @@ import logo from '../assets/logo.svg'
 import {Bounce, ToastContainer , toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import {registerApi} from "../utils/APIRoutes"
+import { registerRoute } from "../utils/APIRoutes"
 
 export const Register = () => {
   const navigate=useNavigate();
@@ -13,7 +13,7 @@ export const Register = () => {
       username:"",
       email:"",
       password:"",
-      confirmpassword:""
+      confirmPassword:"",
 });
  const toastOption={
   position:"bottom-right",
@@ -33,15 +33,17 @@ export const Register = () => {
     const handleSubmit= async(e)=>{
         e.preventDefault();
       if(handleValidation()){
-        const {email,password,username}=value;
-        const {data}=await  axios.post(registerApi,{
-          email,password,username
+        const {password,username,email}=value;
+        const {data}=await  axios.post(registerRoute,{
+          password,username,email
         })
       
         if(data.status=== false)
         toast.error(data.msg,toastOption);
       if(data.status === true){
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
+        // Dispatch storage event to notify other components
+        window.dispatchEvent(new Event('storage'));
         navigate("/setAvatar"); 
       }
       };
@@ -49,9 +51,9 @@ export const Register = () => {
     }
   //validatiaon
     const handleValidation=()=>{
-        const {password, confirmpassword ,username,email}=value;
+        const {password, confirmPassword ,username,email}=value;
         
-        if(password!==confirmpassword){
+        if(password!==confirmPassword){
           toast.error('password and confirm password should be same',   toastOption);
           return false;
         }  else if(password.length<8){
@@ -83,7 +85,7 @@ export const Register = () => {
     <input type='text' placeholder='Username' name='username' onChange={(e)=>handleChange(e)}></input>
     <input type='email' placeholder='Email' name='email' onChange={(e)=>handleChange(e)}></input>
     <input type='password' placeholder='Password' name='password' onChange={(e)=>handleChange(e)}></input>
-    <input type='password' placeholder='Confirm Password' name='confirmpassword' onChange={(e)=>handleChange(e)}></input>
+    <input type='password' placeholder='Confirm Password' name='confirmPassword' onChange={(e)=>handleChange(e)}></input>
     <button type='submit' >Create User</button>
     <span>Already have an account ? <Link to="/login"> Login</Link></span>
     </form>
