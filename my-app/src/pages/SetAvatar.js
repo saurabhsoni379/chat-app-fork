@@ -64,25 +64,50 @@ export const SetAvatar = () => {
 
 
  
-const setAvatarImage=async()=>{
-  if(selected=== undefined)
+const setAvatarImage = async () => {
+  if (selected === undefined) {
     toast.error("Please select an avatar", toastOption);
-  else{
-    const user=await JSON.parse(localStorage.getItem('chat-app-user') );
-    const {data}=await axios.post(`${avatarApi}/${user._id}`,{
-      image:avatar[selected]
-    })
-   
-    if(data.isSet){
-       user.isAvatarImageSet=true;
-       user.avatarImage=data.image;
-       localStorage.setItem("chat-app-user" ,JSON.stringify( user));
-      
-       navigate("/chat");
-    }
-    
+    return;
   }
-}  
+
+  try {
+    const user = JSON.parse(localStorage.getItem('chat-app-user'));
+    if (!user || !user._id) {
+      toast.error("User not found. Please login again.", toastOption);
+      navigate("/login");
+      return;
+    }
+
+    const { data } = await axios.post(`${avatarApi}/${user._id}`, {
+      image: avatar[selected]
+    });
+
+    console.log("Server response:", data);
+
+    if (data && data.isSet) {
+      // Create a new user object with updated avatar
+      const updatedUser = {
+        ...user,
+        isAvatarImageSet: true,
+        avatarImage: data.image
+      };
+
+      // Update localStorage
+      localStorage.setItem("chat-app-user", JSON.stringify(updatedUser));
+
+      // Force a state update before navigation
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // Navigate to chat
+      window.location.href = "/chat";
+    } else {
+      toast.error("Failed to set avatar", toastOption);
+    }
+  } catch (error) {
+    console.error("Error setting avatar:", error);
+    toast.error("Error setting avatar. Please try again.", toastOption);
+  }
+};  
   
   return (
     <>

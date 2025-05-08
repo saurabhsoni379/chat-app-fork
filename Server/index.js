@@ -42,13 +42,50 @@ const io=socket(server,{
 credentials:true,
     },
 });
-const onlineUsers=new Map();
+const onlineUsers = new Map();
 
-io.on('connection',(socket)=>{
+io.on('connection', (socket) => {
+  // When a user connects
+  socket.on('add-user', (userId) => {
+    // Add user to online users map
+    onlineUsers.set(userId, socket.id);
+    console.log('User connected:', userId, 'Socket ID:', socket.id);
+    
+    // Broadcast to ALL users that this user is online
+    io.emit('user-status-change', {
+      userId: userId,
+      status: 'online'
+    });
 
-  socket.on('add-user',(userId)=>{
-    onlineUsers.set(userId,socket.id);
-    console.log('User connected:', userId);
+    // Send current online users list to the newly connected user
+    const onlineUsersList = Array.from(onlineUsers.keys());
+    socket.emit('online-users-list', onlineUsersList);
+  });
+
+  // When a user disconnects
+  socket.on('disconnect', () => {
+    // Find and remove the disconnected user
+    for (const [userId, socketId] of onlineUsers.entries()) {
+      if (socketId === socket.id) {
+        onlineUsers.delete(userId);
+        // Broadcast to ALL users that this user is offline
+        io.emit('user-status-change', {
+          userId: userId,
+          status: 'offline'
+        });
+        break;
+      }
+    }
+  });
+
+  // Add an endpoint to check if a user is online
+  socket.on('check-online-status', (userId) => {
+    const isOnline = onlineUsers.has(userId);
+    console.log('Checking online status for user:', userId, 'Is online:', isOnline);
+    socket.emit('online-status-response', {
+      userId: userId,
+      status: isOnline ? 'online' : 'offline'
+    });
   });
 
   // Add an event for contact status changes
@@ -60,6 +97,19 @@ io.on('connection',(socket)=>{
       socket.to(recipientSocket).emit('contact-update', {
         senderId: data.senderId,
         status: data.status
+      });
+    }
+  });
+
+  // Handle typing events
+  socket.on('typing', (data) => {
+    const recipientSocket = onlineUsers.get(data.to);
+    
+    if (recipientSocket) {
+      // Send typing event to the recipient
+      io.to(recipientSocket).emit('typing', {
+        from: data.from,
+        isTyping: data.isTyping
       });
     }
   });

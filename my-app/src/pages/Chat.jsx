@@ -9,7 +9,6 @@ import { Chatcontainer } from '../component/Chatcontainer';
 import dlgbx from '../context/dlgbx';
 import { DialogBox } from '../component/DialogBox';
 import {io} from "socket.io-client"
-
 // Global style to prevent horizontal scrolling anywhere in the app
 const GlobalStyle = createGlobalStyle`
   html, body {
